@@ -97,16 +97,16 @@ class SearchPassService(dbus.service.Object):
                 if filename[-4:] != '.gpg':
                     continue
                 path = path_join(dir_path, filename)[:-4]
-                for part in path.split('/'):
+                subpaths = path.split('/')
+                subpaths.append(path)
+                for part in subpaths:
                     # smartcase: be case insensitive unless uppercase
                     # characters are used in the search
                     if name.islower():
                         part = part.lower()
                     matcher.set_seq1(part)
                     score = matcher.ratio()
-                    if score >= 0.5 and \
-                            (path not in matches or score > matches[path]):
-                        matches[path] = score
+                    matches[path] = score
 
         return sorted(matches, key=matches.__getitem__, reverse=True)
 
